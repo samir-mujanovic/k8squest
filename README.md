@@ -36,6 +36,7 @@ K8sQuest includes **comprehensive safety guards** (enabled by default):
 - kind
 - bash
 - python3
+- jq
 
 ## Quick Start
 ```bash
