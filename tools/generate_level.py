@@ -26,11 +26,11 @@ def create_level(world, level_num, level_name, config):
         "concepts": config.get("concepts", [])
     }
     
-    with open(level_dir / "mission.yaml", 'w') as f:
+    with open(level_dir / "mission.yaml", 'w', encoding='utf-8') as f:
         yaml.dump(mission, f, default_flow_style=False)
     
     # Create broken.yaml
-    with open(level_dir / "broken.yaml", 'w') as f:
+    with open(level_dir / "broken.yaml", 'w', encoding='utf-8') as f:
         f.write(config.get("broken_yaml", "# Add broken resources here\n"))
     
     # Create validate.sh
@@ -40,7 +40,7 @@ echo "✅ Validation passed"
 exit 0
 """)
     
-    with open(level_dir / "validate.sh", 'w') as f:
+    with open(level_dir / "validate.sh", 'w', encoding='utf-8') as f:
         f.write(validate_script)
     
     # Make validate.sh executable
@@ -54,7 +54,7 @@ exit 0
     ])
     
     for i, hint in enumerate(hints[:3], 1):
-        with open(level_dir / f"hint-{i}.txt", 'w') as f:
+        with open(level_dir / f"hint-{i}.txt", 'w', encoding='utf-8') as f:
             f.write(hint)
     
     # Create debrief.md
@@ -81,12 +81,12 @@ exit 0
 [List kubectl commands here]
 """)
     
-    with open(level_dir / "debrief.md", 'w') as f:
+    with open(level_dir / "debrief.md", 'w', encoding='utf-8') as f:
         f.write(debrief)
     
     # Create solution.yaml if provided
     if "solution_yaml" in config:
-        with open(level_dir / "solution.yaml", 'w') as f:
+        with open(level_dir / "solution.yaml", 'w', encoding='utf-8') as f:
             f.write(config["solution_yaml"])
     
     print(f"✅ Created: {level_dir}")

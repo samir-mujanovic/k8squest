@@ -90,7 +90,7 @@ class K8sQuest:
 
     def save_progress(self):
         """Save player progress"""
-        with open(self.progress_file, "w") as f:
+        with open(self.progress_file, "w", encoding='utf-8') as f:
             json.dump(self.progress, indent=2, fp=f)
 
     def show_welcome(self):

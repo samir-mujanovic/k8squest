@@ -96,7 +96,7 @@ def save_certificate(world_num, certificate):
     
     cert_file = cert_dir / f"world-{world_num}-completion.txt"
     
-    with open(cert_file, 'w') as f:
+    with open(cert_file, 'w', encoding='utf-8') as f:
         f.write(certificate)
     
     return cert_file

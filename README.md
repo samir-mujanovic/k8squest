@@ -1,4 +1,9 @@
 # K8sQuest 🕹️⚙️
+
+[![Platform Support](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-blue)]()
+[![Shell](https://img.shields.io/badge/shell-bash-green)]()
+[![Kubernetes](https://img.shields.io/badge/kubernetes-learning-326CE5)]()
+
 Learn Kubernetes by fixing it.
 
 K8sQuest is a **local, game-based Kubernetes training platform** with an interactive GUI-like terminal interface. Each mission breaks something in Kubernetes. Your job is to fix it.
@@ -37,6 +42,120 @@ K8sQuest includes **comprehensive safety guards** (enabled by default):
 - bash
 - python3
 - jq
+
+## Platform Support
+
+K8sQuest works on **Linux, macOS, and Windows**!
+
+- ✅ **Linux** - Native bash support
+- ✅ **macOS** - Native bash support  
+- ✅ **Windows** - Requires Git Bash (see Windows installation below)
+
+## Installation
+
+### Linux & macOS
+
+Quick setup - just run:
+```bash
+./install.sh
+```
+
+### Windows Installation
+
+K8sQuest supports Windows! Follow these steps:
+
+#### Prerequisites
+
+1. **Docker Desktop** - [Download](https://www.docker.com/products/docker-desktop/)
+   - Install and enable WSL2 backend (recommended)
+   - **Start Docker Desktop** before running K8sQuest
+
+2. **Git for Windows** - [Download](https://git-scm.com/download/win)
+   - ✅ Includes Git Bash (required!)
+   - ✅ Includes essential Unix utilities
+   - **Important:** Always use Git Bash, not PowerShell or CMD
+
+3. **kubectl** - Choose one installation method:
+   ```bash
+   # Option 1: Using Chocolatey (in PowerShell as Admin)
+   choco install kubernetes-cli
+   
+   # Option 2: Using Scoop
+   scoop install kubectl
+   
+   # Option 3: Manual download
+   # Visit: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+   ```
+
+4. **Kind** - Choose one installation method:
+   ```bash
+   # Option 1: Using Chocolatey (in PowerShell as Admin)
+   choco install kind
+   
+   # Option 2: Using Scoop
+   scoop install kind
+   
+   # Option 3: Using Go (if you have Go installed)
+   go install sigs.k8s.io/kind@latest
+   ```
+
+5. **Python 3.8+**
+   - **Recommended:** Microsoft Store (search "Python")
+   - Or download from [python.org](https://www.python.org/downloads/windows/)
+
+6. **jq** ( Required for advanced )
+   ```bash
+   # Option 1: Using Chocolatey
+   choco install jq
+   
+   # Option 2: Using Scoop
+   scoop install jq
+   ```
+
+#### Running on Windows
+
+⚠️ **CRITICAL:** Always use **Git Bash**, not PowerShell or CMD!
+
+```bash
+# 1. Open Git Bash (not PowerShell/CMD!)
+# 2. Clone the repository
+git clone https://github.com/Manoj-engineer/k8squest.git
+cd k8squest
+
+# 3. Run installation
+./install.sh
+
+# 4. Start playing
+./play.sh
+```
+
+#### Windows Troubleshooting
+
+**Issue:** `bash: command not found`
+- **Solution:** Make sure you're using Git Bash, not PowerShell or CMD
+
+**Issue:** `docker: command not found`  
+- **Solution:** Start Docker Desktop and wait until it's fully running
+
+**Issue:** Scripts show `^M` errors  
+- **Solution:** This is fixed by `.gitattributes`, but if you still see it:
+  ```bash
+  git config core.autocrlf input
+  git rm --cached -r .
+  git reset --hard
+  ```
+#### Alternative: WSL2
+
+For the best experience on Windows, use Windows Subsystem for Linux:
+
+```bash
+# In PowerShell (as Administrator)
+wsl --install -d Ubuntu
+
+# Then restart your computer and use Ubuntu terminal for K8sQuest
+```
+
+This provides a native Linux environment and the smoothest experience.
 
 ## Quick Start
 ```bash
@@ -160,6 +279,17 @@ If you prefer the old-school bash script:
 ```bash
 ./engine/start_game.sh
 ```
+
+## ⭐ Support the Project
+
+If K8sQuest helped you learn Kubernetes, please consider:
+
+- **⭐ Star this repo** - Help others discover this free resource!
+- **🐦 Share** - Tell your teammates and friends about it
+- **💬 Feedback** - Open an issue with suggestions or bugs
+- **🤝 Contribute** - Add new levels or improve existing ones
+
+Your support helps keep this project free and accessible to everyone learning Kubernetes! 
 
 ## 📖 Contributing
 
