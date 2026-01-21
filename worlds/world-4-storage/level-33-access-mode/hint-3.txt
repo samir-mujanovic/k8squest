@@ -26,10 +26,19 @@ spec:
 
 🚀 Apply:
 ```bash
-kubectl delete -f broken.yaml
+# IMPORTANT: PVC spec is immutable - must delete and recreate!
+kubectl delete deployment web-servers -n k8squest
+kubectl delete pvc shared-pvc -n k8squest
+kubectl delete pv shared-storage
+
+# Apply the corrected configuration
 kubectl apply -f solution.yaml
-kubectl get pods -n k8squest -l app=web -w
+
 # Watch all 3 pods start successfully
+kubectl get pods -n k8squest -l app=web -w
 ```
+
+⚠️  **Why delete first?** PVC's accessModes cannot be changed after creation.
+You must delete the PVC and PV, then recreate them with the correct access mode.
 
 💡 Remember: Both PV and PVC must have matching access modes!
