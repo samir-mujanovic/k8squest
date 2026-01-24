@@ -59,18 +59,39 @@ fi
 echo "✅ Backend has NetworkPolicy: $BACKEND_POLICY"
 
 echo ""
-echo "🔍 VALIDATION STAGE 6: Testing network connectivity..."
-echo "Waiting 10 seconds for policies to take effect..."
-sleep 10
+echo "🔍 VALIDATION STAGE 6: Checking Service & Endpoints (DNS)"
 
-# Check backend logs for successful connection
-BACKEND_LOGS=$(kubectl logs $BACKEND_POD -n $NAMESPACE --tail=20 2>/dev/null || echo "")
-if echo "$BACKEND_LOGS" | grep -q "succeeded\|open\|Connected"; then
-    echo "✅ Backend successfully connecting to database"
+# Ensure a Service exists for the database so the name 'database' resolves
+if ! kubectl get svc database -n $NAMESPACE &>/dev/null; then
+    echo "❌ FAILED: Service 'database' not found in namespace $NAMESPACE"
+    echo "💡 Hint: Create a ClusterIP Service named 'database' selecting the database pod"
+    exit 1
+fi
+echo "✅ Service 'database' exists"
+
+# Check endpoints for the service
+EP_COUNT=$(kubectl get endpoints database -n $NAMESPACE -o json | jq '.subsets | length')
+if [ "$EP_COUNT" = "0" ] || [ "$EP_COUNT" = "null" ]; then
+    echo "❌ FAILED: Service 'database' has no endpoints; pods may not match selector"
+    echo "💡 Hint: Ensure the database pod has label app: database and Service selector matches it"
+    exit 1
+fi
+echo "✅ Service has endpoints: $EP_COUNT subset(s)"
+
+echo ""
+echo "🔍 VALIDATION STAGE 7: Active connectivity test from backend pod"
+echo "Waiting 5 seconds for policies to take effect..."
+sleep 5
+
+# Try to connect from backend to the service DNS name
+kubectl exec $BACKEND_POD -n $NAMESPACE -- sh -c "nc -vz database 5432 -w 5" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo "✅ Backend can reach database: TCP connection to database:5432 succeeded"
 else
-    echo "⚠️  WARNING: Cannot confirm connection in logs yet"
-    echo "   This may be normal if pods just started"
-    echo "   Check logs: kubectl logs $BACKEND_POD -n $NAMESPACE"
+    echo "❌ FAILED: Backend cannot reach database (connection timed out or refused)"
+    echo "   Check NetworkPolicy rules and ensure backend egress + database ingress allow port 5432"
+    echo "   Check backend logs: kubectl logs $BACKEND_POD -n $NAMESPACE"
+    exit 1
 fi
 
 echo ""

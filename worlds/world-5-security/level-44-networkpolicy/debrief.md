@@ -48,7 +48,42 @@ egress:
 
 ---
 
-## 🔒 Understanding NetworkPolicy
+## � Pro Tip: Incremental Application
+
+**Good News:** You can apply NetworkPolicy fixes **without deleting** the existing setup!
+
+### Why This Works
+
+NetworkPolicies are **additive** - when multiple policies match a pod, they combine:
+
+```bash
+# Broken state has deny-all
+kubectl apply -f broken.yaml
+
+# Apply solution incrementally (no delete needed!)
+kubectl apply -f solution.yaml
+```
+
+**Result:**
+- ✅ New allow policies get **created**
+- ✅ Old deny-all policy **remains** (harmless)
+- ✅ Allow rules **override** deny-all for matching selectors
+- ✅ Connectivity **works immediately**
+
+### What Kubernetes Does
+
+```
+deny-all (podSelector: {})
+  + allow-backend-egress (podSelector: {app: backend})
+  + allow-database-ingress (podSelector: {app: database})
+  = Backend and database can communicate!
+```
+
+**Note:** The backend pod may show an error during apply because its command differs between broken/solution, but this is harmless - the NetworkPolicies still apply correctly.
+
+---
+
+## �🔒 Understanding NetworkPolicy
 
 ### What is NetworkPolicy?
 

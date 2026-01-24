@@ -62,6 +62,18 @@ spec:
 - Database can't receive traffic (ingress blocked)
 - Even DNS doesn't work!
 
+## Step 4: Check Service & DNS
+
+If the hostname `database` does not resolve, confirm a Service exists:
+
+```bash
+kubectl get svc database -n k8squest
+kubectl get endpoints database -n k8squest
+```
+
+If the Service or endpoints are missing, DNS will not resolve the short name `database`.
+Create a ClusterIP Service selecting the `app: database` pod so `database` resolves.
+
 ## What You Need to Fix
 
 You need TWO NetworkPolicies:
@@ -77,6 +89,18 @@ kubectl exec backend -n k8squest -- nc -vz database 5432
 
 # Should succeed after fix
 ```
+
+## 💡 Quick Fix Option
+
+You can apply the solution incrementally without deleting the broken state:
+
+```bash
+kubectl apply -f solution.yaml
+```
+
+NetworkPolicies are **additive** - the new allow policies will combine with the existing deny-all,
+and the allow rules take precedence for matching pods. The backend pod may show an error (different
+command), but the NetworkPolicies will still apply correctly.
 
 ---
 

@@ -26,6 +26,22 @@ spec:
     - containerPort: 5432
 
 ---
+# Service for database (so "database" resolves inside the cluster)
+apiVersion: v1
+kind: Service
+metadata:
+  name: database
+  namespace: k8squest
+spec:
+  selector:
+    app: database
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP
+
+---
 # Backend pod
 apiVersion: v1
 kind: Pod
