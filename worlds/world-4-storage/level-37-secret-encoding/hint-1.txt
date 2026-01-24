@@ -1,34 +1,38 @@
-🔍 HINT 1: Observing the Problem
+🔍 HINT 1: Understanding Secret Encoding
 
-Let's investigate the Secret encoding issue:
+⚠️ **Critical Discovery:** Secrets use base64 encoding, but that's NOT encryption!
+
+Let's investigate why this is a security issue:
 
 1️⃣ Check pod status:
    kubectl get pod database-client -n k8squest
-   kubectl describe pod database-client -n k8squest
    
-   Is the pod Running or CrashLoopBackOff?
+   The pod should be Running (the Secret is valid!)
 
-2️⃣ Check pod logs:
-   kubectl logs database-client -n k8squest
-   
-   What error do you see?
-
-3️⃣ Check the Secret:
-   kubectl get secret db-credentials -n k8squest
+2️⃣ Check the Secret:
    kubectl get secret db-credentials -n k8squest -o yaml
    
-   Look at the "data" section - does it look encoded?
+   Look at the "data" section - values appear encoded with base64
 
-4️⃣ Try to decode the values:
-   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}'
-   echo "admin" | base64
+3️⃣ Decode the username:
+   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.username}' | base64 -d
    
-   Do they match? Are the secret values base64 encoded?
+   Output: admin
+
+4️⃣ Decode the password:
+   kubectl get secret db-credentials -n k8squest -o jsonpath='{.data.password}' | base64 -d
+   
+   Output: secretpass123
 
 📝 Key Observation:
-The Secret data contains plain text instead of base64-encoded values!
+Base64 encoding is just ENCODING, not ENCRYPTION!
+Anyone with kubectl access can decode secrets instantly.
 
-🤔 Questions:
-• What format should Secret data be in?
-• How do you base64 encode a value?
-• What happens when the pod tries to use improperly encoded secrets?
+🤔 The Problem:
+• base64 looks secure but provides ZERO security
+• It's just encoding (like UTF-8 or ASCII)
+• kubectl get secret ... | base64 -d reveals everything
+• Secrets stored in etcd are also just base64 (not encrypted by default)
+
+💡 What You Need to Learn:
+How is base64 encoding different from encryption, and what should you use instead?
