@@ -115,8 +115,10 @@ if [ $ERRORS -eq 0 ]; then
     echo "Total XP earned: 10,200 XP!"
     echo ""
     echo "THE STORM HAS PASSED! 🌈"
+    echo "================================"
 else
     echo "❌ $ERRORS issue(s) found"
     echo "Keep fixing! You're almost there!"
+    echo "================================"
+    exit 1
 fi
-echo "================================"
